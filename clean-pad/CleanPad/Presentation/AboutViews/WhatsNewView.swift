@@ -41,8 +41,14 @@ struct WhatsNewView: View {
                 }
             }
             .frame(maxWidth: geometry.size.width)
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(Constants.roundedRectCornerRadius)
+            // 移除或条件判断 presentationDragIndicator
+//            .if #available(iOS 17.0, *) {
+//                view.presentationDragIndicator(.visible)
+//            }
+//            // 移除或条件判断 presentationCornerRadius
+//            .if #available(iOS 17.0, *) {
+//                view.presentationCornerRadius(Constants.roundedRectCornerRadius)
+//            }
         }
     }
 }
@@ -107,11 +113,9 @@ extension WhatsNewView {
                 Image(systemName: imageSystemName)
                     .foregroundStyle(.accent.gradient)
                     .font(.system(size: 40))
-                    .symbolEffect(
-                        .bounce,
-                        options: .speed(0.8),
-                        value: animate
-                    )
+                    // 替换 symbolEffect 为普通动画
+                    .scaleEffect(animate ? 1.2 : 1.0)
+                    .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: animate)
                     .frame(width: 40)
                     .padding(.trailing)
                 

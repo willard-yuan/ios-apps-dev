@@ -154,46 +154,78 @@ struct NoteEditView: View {
                 )
             }
         }
-        .onChange(of: scenePhase) { phase, _ in
-            if (phase == ScenePhase.background) { // When on background phase...
-                editingAToggledNote = false // ...toggle 'editingAToggledNote', so the contents of the current private note can be hidden.
-
-                if !creatingNewNote { // Update only if editing an existing note.
+        // 修改为
+        .onChange(of: scenePhase) { newPhase in
+            if (newPhase == ScenePhase.background) {
+                editingAToggledNote = false
+                if !creatingNewNote {
                     viewModel.update(
                         note: noteCopy,
-                        // Date is only updated when 'noteTitle' or 'noteContent' has changed.
                         updatingDate: willDateBeUpdated
                     )
                 }
             }
         }
-        .onChange(of: noteCopy) {
-            // Return early if the willDateBeUpdated flag is already true.
+        // 同样修改 noteCopy 的 onChange
+        .onChange(of: noteCopy) { newNote in
             if willDateBeUpdated {
                 return
             } else {
-                // If the note title or content changes...
-                if (noteCopy.noteTitle != originalNote.noteTitle) || (noteCopy.noteContent != originalNote.noteContent) {
-                    // ...its date will be updated.
+                if (newNote.noteTitle != originalNote.noteTitle) || (newNote.noteContent != originalNote.noteContent) {
                     willDateBeUpdated = true
                 }
             }
             
-            // Check if the app is running on macOS or iPadOS to apply real-time saving.
             if ProcessInfo.processInfo.isiOSAppOnMac || viewModel.idiom == .pad {
-                // Swift Concurrency (Task) to introduce a non-blocking delay before saving:
                 Task {
-                    try await Task.sleep(nanoseconds: 500_000_000) // 0.5 sec delay
-                    
-                    // Save the note after the delay:
+                    try await Task.sleep(nanoseconds: 500_000_000)
                     viewModel.update(
-                        note: noteCopy,
-                        // Date is only updated when 'noteTitle' or 'noteContent' has changed.
+                        note: newNote,
                         updatingDate: willDateBeUpdated
                     )
                 }
             }
         }
+        // .onChange(of: scenePhase) { phase, _ in
+        //     if (phase == ScenePhase.background) { // When on background phase...
+        //         editingAToggledNote = false // ...toggle 'editingAToggledNote', so the contents of the current private note can be hidden.
+
+        //         if !creatingNewNote { // Update only if editing an existing note.
+        //             viewModel.update(
+        //                 note: noteCopy,
+        //                 // Date is only updated when 'noteTitle' or 'noteContent' has changed.
+        //                 updatingDate: willDateBeUpdated
+        //             )
+        //         }
+        //     }
+        // }
+        // .onChange(of: noteCopy) {
+        //     // Return early if the willDateBeUpdated flag is already true.
+        //     if willDateBeUpdated {
+        //         return
+        //     } else {
+        //         // If the note title or content changes...
+        //         if (noteCopy.noteTitle != originalNote.noteTitle) || (noteCopy.noteContent != originalNote.noteContent) {
+        //             // ...its date will be updated.
+        //             willDateBeUpdated = true
+        //         }
+        //     }
+            
+        //     // Check if the app is running on macOS or iPadOS to apply real-time saving.
+        //     if ProcessInfo.processInfo.isiOSAppOnMac || viewModel.idiom == .pad {
+        //         // Swift Concurrency (Task) to introduce a non-blocking delay before saving:
+        //         Task {
+        //             try await Task.sleep(nanoseconds: 500_000_000) // 0.5 sec delay
+                    
+        //             // Save the note after the delay:
+        //             viewModel.update(
+        //                 note: noteCopy,
+        //                 // Date is only updated when 'noteTitle' or 'noteContent' has changed.
+        //                 updatingDate: willDateBeUpdated
+        //             )
+        //         }
+        //     }
+        // }
         .presentationCornerRadius(Constants.roundedRectCornerRadius)
         .alert(isPresent: $isAlertPresented, view: alertView)
         .alert("Authentication error", isPresented: $viewModel.isShowingAuthenticationErrorWhenEditing) {

@@ -109,16 +109,16 @@ extension AboutCleanPadView {
         
         switch hour {
         case 6..<12:
-            greeting = "Good morning!"
+            greeting = "早安!"
             gradientColors = ColorfulPreset.sunrise.colors
         case 12..<17:
-            greeting = "Good afternoon!"
+            greeting = "中午好!"
             gradientColors = ColorfulPreset.lemon.colors
         case 17..<20:
-            greeting = "Good evening!"
+            greeting = "晚上好!"
             gradientColors = ColorfulPreset.sunrise.colors
         default:
-            greeting = "Good night!"
+            greeting = "晚安!"
             gradientColors = ColorfulPreset.jelly.colors
         }
     }

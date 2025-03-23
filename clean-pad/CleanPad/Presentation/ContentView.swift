@@ -23,7 +23,7 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
-        NavigationStack {
+        NavigationView {  // 改用 NavigationView 替代 NavigationStack
             MainScreenView(
                 viewModel: viewModel,
                 dateViewModel: dateViewModel,
@@ -76,12 +76,18 @@ struct ContentView: View {
         .sheet(isPresented: $sheetsViewModel.showWhatsNewSheet) { WhatsNewView() }
         .sheet(isPresented: $sheetsViewModel.showFeedbackSheet) { FeedbackView() }
         .sheet(isPresented: $sheetsViewModel.showAboutSheet) { AboutCleanPadView() }
-        .onChange(of: scenePhase) { phase, _ in
-            // Restrict access to locked notes when the app enters the background.
-            if phase == ScenePhase.background {
+        // 修改为
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == ScenePhase.background {
                 viewModel.isUnlocked = false
             }
         }
+        // .onChange(of: scenePhase) { phase, _ in
+        //     // Restrict access to locked notes when the app enters the background.
+        //     if phase == ScenePhase.background {
+        //         viewModel.isUnlocked = false
+        //     }
+        // }
     }
 }
 
@@ -101,6 +107,7 @@ extension ContentView {
     }
     
     /// Button to allow and forbid access to the locked notes list (private space).
+    // 在 lockAndUnlockNotesButtonView 中修改
     var lockAndUnlockNotesButtonView: some View {
         Button {
             withAnimation(.bouncy) {
@@ -113,7 +120,7 @@ extension ContentView {
             }
         } label: {
             Image(systemName: viewModel.isUnlocked ? "lock.open.fill" : "lock.fill")
-                .contentTransition(.symbolEffect(.replace))
+            // 移除 iOS 17 特有的 contentTransition
         }
         .accessibilityLabel(
             viewModel.isUnlocked ? "Your private notes are currently accessible" : "Your private notes are currently locked"
