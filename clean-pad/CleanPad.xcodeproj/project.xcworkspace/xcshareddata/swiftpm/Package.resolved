@@ -1,0 +1,33 @@
+{
+  "originHash" : "774ed71d67c916a0894985bc9218ce306ff4dc81fa3f45f6cfcc10468f7cf609",
+  "pins" : [
+    {
+      "identity" : "alertkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sparrowcode/AlertKit",
+      "state" : {
+        "revision" : "3b73be8db5a7e7efaf474c6ed919f5a437d843c9",
+        "version" : "5.1.9"
+      }
+    },
+    {
+      "identity" : "colorfulx",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Lakr233/ColorfulX.git",
+      "state" : {
+        "revision" : "24bbc2f4b27c853f2be5ebed144252d9bcd27ee0",
+        "version" : "2.4.5"
+      }
+    },
+    {
+      "identity" : "springinterpolation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Lakr233/SpringInterpolation.git",
+      "state" : {
+        "revision" : "be8721cffc87ec514fa13ba5dab586a2730f51c9",
+        "version" : "1.1.2"
+      }
+    }
+  ],
+  "version" : 3
+}
